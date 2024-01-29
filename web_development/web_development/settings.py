@@ -12,8 +12,19 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from .config import CredentialLoader
+import json
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+print('BASE_DIR', BASE_DIR)
+PIPELINE_ENV = os.getenv("PIPELINE_ENV", "local")
+CredentialLoader(PIPELINE_ENV).set_config()
+
+
+def get_config():
+    return json.loads(os.getenv("config_data"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,10 +34,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e-ih4_pr&p0gl4!3d^+3ewi4kk#j^yq@xlh2v9ucdj$25@49!_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+creds_obj = get_config()
+DB_NAME = creds_obj.get('DB_NAME')
+DB_USERNAME = creds_obj.get('DB_USERNAME')
+DB_PASSWORD = creds_obj.get('DB_PASSWORD')
+DB_HOST = creds_obj.get('DB_HOST')
+DB_PORT = creds_obj.get('DB_PORT')
+DEBUG_MODE = creds_obj.get('AUTO_RELOAD')
+print('creds_obj :', creds_obj)
+DEBUG = DEBUG_MODE
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -70,22 +89,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web_development.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# todo remove db creds hardcode values
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'office',
-        'USER': 'postgres',
-        'PASSWORD': 'rockstar12527',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': DB_NAME,
+        'USER': DB_USERNAME,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -105,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -116,7 +132,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

@@ -1,9 +1,9 @@
-from django.db.models import Model,  CharField, BigIntegerField, TextField
+from django.db.models import Model,  CharField, BigIntegerField, TextField, AutoField
 
 
 # Create your models here.
 class JobModel(Model):
-    id = BigIntegerField(primary_key=True, )
+    id = AutoField(primary_key=True)
     title = CharField(max_length=100)
     location = CharField(max_length=100)
     description = TextField()
