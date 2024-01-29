@@ -1,3 +1,5 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/web_development/base/__pycache__
+web_development/__pycache__

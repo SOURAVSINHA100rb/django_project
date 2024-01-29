@@ -1,4 +1,4 @@
-from django.db.models import Model,  CharField, BigIntegerField, TextField, AutoField
+from django.db.models import Model,  CharField, TextField, AutoField
 
 
 # Create your models here.
